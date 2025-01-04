@@ -94,7 +94,7 @@ To set up the project locally:
 
 ### For API Tests:
 1. Right-click on `api-testng.xml` and click on **Run** to execute the API tests.
-
+### Also You Can Run All the Tests Using "mvn test" when you are inside the installed repo: "FoodicsAutomationTask":
 ## Error Handling
 
 Error handling is implemented using:
