@@ -1,10 +1,14 @@
 package com.atroush.gui.pages;
 
+import com.atroush.gui.actions.BrowserActions.BrowserActions;
 import com.atroush.gui.actions.UiActions.SeleUtilities;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.atroush.gui.actions.BrowserActions.BrowserActions.driver;
 
 public class ShoppingCart_PageObj {
 
@@ -13,6 +17,7 @@ public class ShoppingCart_PageObj {
     private String itemName = "//span[contains(text(),'value')]";
     private final By itemNames = By.xpath("//span[@class='a-truncate-cut']");
     private final By checkOutBtn = By.name("proceedToRetailCheckout");
+    private final By deleteBtn = By.xpath("//input[contains(@name,'submit.delete.')]");
 
     //variables
     private double total = 0;
@@ -69,5 +74,39 @@ public class ShoppingCart_PageObj {
 
     public void clickCheckOut() {
         SeleUtilities.clickOnElement(checkOutBtn);
+    }
+
+    public void clearCart() {
+        List<WebElement> elements = new ArrayList<>();
+        try {
+            SeleUtilities.waitForElementToBeClickable(deleteBtn, 10);
+            elements = BrowserActions.driver.findElements(deleteBtn);
+
+        } catch (Exception e) {
+            System.out.println("Elements not found" + e.getMessage());
+        }
+
+        if (elements.size() == 1) {
+            SeleUtilities.waitForElementToBeClickable(deleteBtn, 10);
+            elements.get(0).click();
+        } else {
+            for (int i = 0; i < elements.size(); i++) {
+
+                if (elements.size() - i == 1) {
+                    try {
+                        SeleUtilities.waitForElementToBeClickable(deleteBtn, 10);
+                        int y = elements.size() - 1;
+                        SeleUtilities.clickOnElement(deleteBtn);
+                    } catch (Exception e) {
+                        SeleUtilities.retryingFindElement(deleteBtn, 5);
+                        System.out.println("Element not found " + e.getMessage());
+                        SeleUtilities.retryingFindElement(deleteBtn, 5);
+                    }
+                } else {
+                    SeleUtilities.waitForElementToBeClickable(deleteBtn, 10);
+                    elements.get(elements.size() - i - 1).click();
+                }
+            }
+        }
     }
 }

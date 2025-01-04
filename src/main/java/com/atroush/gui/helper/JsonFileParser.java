@@ -13,9 +13,7 @@ public class JsonFileParser {
     public JsonFileParser() throws IOException {
 
         StringBuilder jsonData = new StringBuilder();
-        String baseDir = System.getProperty("user.dir");
-        System.out.println("Base" + baseDir);
-        BufferedReader reader = new BufferedReader(new FileReader(baseDir + "//src//Helper//java//com//atroush//gui//testdata//AdressDetails.json"));
+        BufferedReader reader = new BufferedReader(new FileReader("src/test/java/com/atroush/gui/testdata/AdressDetails.json"));
         String line;
         while ((line = reader.readLine()) != null) {
             jsonData.append(line);

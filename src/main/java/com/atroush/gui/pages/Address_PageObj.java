@@ -15,6 +15,7 @@ public class Address_PageObj {
     private final By nearestLandMarkInput = By.id("address-ui-widgets-landmark");
     private final By defaultAddressCheckbox = By.id("address-ui-widgets-use-as-my-default");
     private final By useThisAddressBtn = By.xpath("//span[@id='checkout-primary-continue-button-id']//input[@data-csa-c-slot-id='address-ui-widgets-continue-address-btn-bottom']");
+    private final By addThisAddressBtn = By.xpath("//span[@id='address-ui-widgets-form-submit-button']//input");
     //variables
     private String cityInputPath = "//li[contains(text(),'value')]";
     private String districtInputPath = "//li[contains(text(),'value')]";
@@ -62,8 +63,14 @@ public class Address_PageObj {
     }
 
     public void clickUseThisAddress() {
-        SeleUtilities.awaitilityWait(useThisAddressBtn, 2, 10);
-        SeleUtilities.clickOnElement(useThisAddressBtn);
+        try {
+            SeleUtilities.awaitilityWait(useThisAddressBtn, 2, 10);
+            SeleUtilities.clickOnElement(useThisAddressBtn);
+        } catch (Exception e) {
+            System.out.println("Exception happened" + e.getMessage());
+            SeleUtilities.clickOnElement(addThisAddressBtn);
+
+        }
     }
 
 }

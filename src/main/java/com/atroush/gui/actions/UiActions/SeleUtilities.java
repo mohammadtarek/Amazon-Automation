@@ -85,7 +85,9 @@ public class SeleUtilities {
     }
 
     public static void clickOnMultipleElements(By locator) {
+       awaitilityWait(locator,4,10);
         List<WebElement> elements = driver.findElements(locator);
+
 
         for (WebElement element : elements) {
             try {
@@ -146,7 +148,7 @@ public class SeleUtilities {
 
         } catch (StaleElementReferenceException e) {
             System.out.println("Element became stale: " + element);
-            retryingFindElement(element, 5);
+            retryingFindElement(element, 5).click();
         }
 
         return prices;

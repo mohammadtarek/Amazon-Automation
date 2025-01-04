@@ -43,6 +43,7 @@ public class TestAddVideoGames {
 
         navigateToLoginPage();
         login();
+        clearCart();
         openBurgerMenu();
 
         catMenuPageObj.selectVideoGames();
@@ -54,7 +55,7 @@ public class TestAddVideoGames {
         assertIemsTotalPrice(shoppingCartPageObj.calculateTotalPrice(), shoppingCartPageObj.getActualTotalPrice());
         validateCartItemsNum(shoppingCartPageObj.getCartItemsNum(), resultsPageObj.getItemsNumber());
         shoppingCartPageObj.clickCheckOut();
-        checkOutPageObj.finalCheckout();
+        checkOutPageObj.declinePrime().finalCheckout();
         setAddressDetails();
         softAssert.assertAll();
 
@@ -71,13 +72,22 @@ public class TestAddVideoGames {
     }
 
     public void login() {
-        LoginEmail_PageObj loginEmailPageObj =new LoginEmail_PageObj();
+        LoginEmail_PageObj loginEmailPageObj = new LoginEmail_PageObj();
         LoginPassword_PageObj loginPasswordPageObj = new LoginPassword_PageObj();
 
         loginEmailPageObj.setEmail(configReader.getProperty("username"))
                 .clickContinue();
-        loginPasswordPageObj.setPassword( configReader.getProperty("password"))
+        loginPasswordPageObj.setPassword(configReader.getProperty("password"))
                 .clickLogin();
+
+    }
+
+    public void clearCart() {
+        Home_PageObj homePageObj = new Home_PageObj();
+        ShoppingCart_PageObj shoppingCartPageObj=new ShoppingCart_PageObj();
+        homePageObj.navigateToCart();
+        shoppingCartPageObj.clearCart();
+
 
     }
 
@@ -100,7 +110,7 @@ public class TestAddVideoGames {
                     chooseDefaultAddress().
                     clickUseThisAddress();
         } catch (Exception e) {
-            System.out.println("Exception happened while accessing the json file" + e.getMessage());
+            System.out.println("Exception happened" + e.getMessage());
         }
 
     }
