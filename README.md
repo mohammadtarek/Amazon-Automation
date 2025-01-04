@@ -42,8 +42,8 @@ To set up the project locally:
 1. Clone the Repository:
 
 2. **Dependencies**:
-   - Java 11 or higher.
-   - Maven for dependency management.
+   - Java version: 21.0.1 .
+   - Apache Maven 3.9.6 for dependency management.
    - RestAssured, TestNG, and other dependencies are managed by Maven.
 
 ## Test Scenarios
