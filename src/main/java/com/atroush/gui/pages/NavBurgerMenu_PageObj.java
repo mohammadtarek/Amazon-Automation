@@ -12,6 +12,7 @@ public class NavBurgerMenu_PageObj {
     private final By seeAllBtn = By.xpath("//a[@aria-label='See All Categories']");
 
     public NavBurgerMenu_PageObj selectVideoGames() {
+        SeleUtilities.awaitilityWait(seeAllBtn,1,5);
         SeleUtilities.clickOnElement(seeAllBtn);
         SeleUtilities.clickOnElement(videoGamesBtn);
         JavaScriptUtilities.clickElementWithJavaScript(allVideoGamesBtn);

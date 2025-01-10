@@ -14,25 +14,27 @@ public class ShoppingCart_PageObj {
 
     //locators
     private final By actualTotalPrice = By.xpath("//span[@id='sc-subtotal-amount-activecart']//span");
-    private String itemName = "//span[contains(text(),'value')]";
     private final By itemNames = By.xpath("//span[@class='a-truncate-cut']");
     private final By checkOutBtn = By.name("proceedToRetailCheckout");
     private final By deleteBtn = By.xpath("//input[contains(@name,'submit.delete.')]");
 
+    //paths
+//    private String itemName = "//span[contains(text(),'value')]";
+    private String itemPricePath = "//span[contains(text(),'value')]/ancestor::ul//span[contains(@class,'a-price a-text-price sc-product-price sc-white-space-nowrap a-size-medium')]//span[contains(@aria-hidden,'true')]";
+
     //variables
-    private double total = 0;
+
     private List<String> itemNamesList = new ArrayList<String>();
-    private List<Double> finalTotalPrices = new ArrayList<Double>();
 
     public double calculateTotalPrice() {
 
         itemNamesList = SeleUtilities.getMultipleText(itemNames);
-        List<Double> totalPrices = new ArrayList<Double>();
-        totalPrices = getTotalPriceAfterClearing(itemNamesList);
-        for (int i = 0; i < totalPrices.size(); i++) {
-            total += totalPrices.get(i);
-        }
-        return total;
+//        List<Double> totalPrices = new ArrayList<Double>();
+        return getTotalPriceAfterClearing(itemNamesList);
+//        for (int i = 0; i < totalPrices.size(); i++) {
+//            total += totalPrices.get(i);
+//        }
+//        return total;
     }
 
 
@@ -45,28 +47,38 @@ public class ShoppingCart_PageObj {
         return Double.parseDouble(price.replaceAll("[^0-9\\.]", ""));
     }
 
-    private List<Double> getTotalPriceAfterClearing(List<String> itemsName) {
-
-        By wholePriceLabel;
-        By fractionalPriceLabel;
-        String wholePricePath = "//span[@class='aok-align-center a-text-bold']//span[@class='a-price-whole']";
-        String fractionalPricePath = "//span[@class='aok-align-center a-text-bold']//span[@class='a-price-fraction']";
-        String ancestor = "/ancestor::ul";
-
+    private double getTotalPriceAfterClearing(List<String> itemsName) {
+        double totalPrice = 0.0;
         for (int i = 0; i < itemsName.size(); i++) {
-
-            String finalWholePricePath = itemName.replace("value", itemsName.get(i)) + ancestor + wholePricePath;
-            wholePriceLabel = By.xpath(finalWholePricePath);
-            String wholePriceFormatted = SeleUtilities.getText(wholePriceLabel).replace(",", "");
-
-            String finalFractionalPricePath = itemName.replace("value", itemsName.get(i)) + ancestor + fractionalPricePath;
-            fractionalPriceLabel = By.xpath(finalFractionalPricePath);
-            String fractionalPriceFormatted = SeleUtilities.getText(fractionalPriceLabel);
-
-            finalTotalPrices.add(Double.parseDouble(wholePriceFormatted + "." + fractionalPriceFormatted));
+            String price = SeleUtilities.getText(By.xpath(itemPricePath.replace("value", itemsName.get(i))));
+            totalPrice += formatPriceToDouble(price);
         }
-        return finalTotalPrices;
+        return totalPrice;
     }
+//
+//    private List<Double> getTotalPriceAfterClearing(List<String> itemsName) {
+//
+//        By wholePriceLabel;
+//        By fractionalPriceLabel;
+//        String wholePricePath = "//span[@class='aok-align-center a-text-bold']//span[@class='a-price-whole']";
+//        String fractionalPricePath = "//span[@class='aok-align-center a-text-bold']//span[@class='a-price-fraction']";
+//        String ancestor = "/ancestor::ul";
+//
+//        for (int i = 0; i < itemsName.size(); i++) {
+//
+//            String finalWholePricePath = itemName.replace("value", itemsName.get(i)) + ancestor + wholePricePath;
+//            wholePriceLabel = By.xpath(finalWholePricePath);
+//            String wholePriceFormatted = SeleUtilities.getText(wholePriceLabel).replace(",", "");
+//
+//            String finalFractionalPricePath = itemName.replace("value", itemsName.get(i)) + ancestor + fractionalPricePath;
+//            fractionalPriceLabel = By.xpath(finalFractionalPricePath);
+//            String fractionalPriceFormatted = SeleUtilities.getText(fractionalPriceLabel);
+//
+//            finalTotalPrices.add(Double.parseDouble(wholePriceFormatted + "." + fractionalPriceFormatted));
+//        }
+//        return finalTotalPrices;
+//    }
+
 
     public int getCartItemsNum() {
         return itemNamesList.size();
@@ -83,29 +95,38 @@ public class ShoppingCart_PageObj {
             elements = BrowserActions.driver.findElements(deleteBtn);
 
         } catch (Exception e) {
-            System.out.println("Elements not found" + e.getMessage());
+            System.out.println("Cart is Empty" + e.getMessage());
         }
 
         if (elements.size() == 1) {
             SeleUtilities.waitForElementToBeClickable(deleteBtn, 10);
             elements.get(0).click();
         } else {
-            for (int i = 0; i < elements.size(); i++) {
+            int elementsSize = elements.size();
+            for (int i = elementsSize - 1; i >= 0; i--) {
 
-                if (elements.size() - i == 1) {
-                    try {
-                        SeleUtilities.waitForElementToBeClickable(deleteBtn, 10);
-                        int y = elements.size() - 1;
-                        SeleUtilities.clickOnElement(deleteBtn);
-                    } catch (Exception e) {
-                        SeleUtilities.retryingFindElement(deleteBtn, 5);
-                        System.out.println("Element not found " + e.getMessage());
-                        SeleUtilities.retryingFindElement(deleteBtn, 5);
-                    }
-                } else {
-                    SeleUtilities.waitForElementToBeClickable(deleteBtn, 10);
-                    elements.get(elements.size() - i - 1).click();
+//                if (elements.size()  == 1) {
+//                    try {
+//                        System.out.println("last item of the list" + elements);
+//                        SeleUtilities.awaitilityWait(deleteBtn, 2, 10);
+//                        SeleUtilities.clickOnElement(deleteBtn);
+//                    } catch (Exception e) {
+//                        SeleUtilities.retryingFindElement(deleteBtn, 5);
+//                        System.out.println("Element not found " + e.getMessage());
+//                        SeleUtilities.retryingFindElement(deleteBtn, 5);
+//                    }
+//                } else {
+                SeleUtilities.awaitilityWait(deleteBtn, 2, 5);
+                SeleUtilities.waitForThePresenceOfElement(deleteBtn, 10);
+                SeleUtilities.waitForElementToBeClickable(deleteBtn, 10);
+                elements.get(i).click();
+                try {
+                    SeleUtilities.awaitilityWait(deleteBtn, 2, 5);
+                    elements = driver.findElements(deleteBtn);
+                } catch (Exception e) {
+                    System.out.println("The cart is Empty now");
                 }
+//                }
             }
         }
     }

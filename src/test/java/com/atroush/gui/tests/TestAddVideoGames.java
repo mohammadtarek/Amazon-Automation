@@ -30,7 +30,7 @@ public class TestAddVideoGames {
     }
 
     @Test
-    public void selectVideoGames() {
+    public void selectVideoGames(){
         //obj initialization
         Home_PageObj homePageObj = new Home_PageObj();
         NavBurgerMenu_PageObj catMenuPageObj = new NavBurgerMenu_PageObj();
@@ -52,7 +52,7 @@ public class TestAddVideoGames {
 
         homePageObj.navigateToCart();
 
-        assertIemsTotalPrice(shoppingCartPageObj.calculateTotalPrice(), shoppingCartPageObj.getActualTotalPrice());
+        assertItemsTotalPrice(shoppingCartPageObj.calculateTotalPrice(), shoppingCartPageObj.getActualTotalPrice());
         validateCartItemsNum(shoppingCartPageObj.getCartItemsNum(), resultsPageObj.getItemsNumber());
         shoppingCartPageObj.clickCheckOut();
         checkOutPageObj.declinePrime().finalCheckout();
@@ -115,9 +115,9 @@ public class TestAddVideoGames {
 
     }
 
-    public void assertIemsTotalPrice(double expectedTotalPrice, double actualTotalPrice) {
+    public void assertItemsTotalPrice(double expectedTotalPrice, double actualTotalPrice) {
 
-        softAssert.assertEquals(actualTotalPrice, expectedTotalPrice, "In Correct Total Price Calculation");
+        softAssert.assertEquals(actualTotalPrice, expectedTotalPrice, "Incorrect Total Price Calculation");
     }
 
     public void validateCartItemsNum(int expecteTodtalNumber, int cartTotalNumber) {
